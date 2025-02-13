@@ -6,4 +6,6 @@ On the Arduino Uno, pin 0 and pin 1 are set aside for UART communication. Howeve
 
 In my case, I connected PA2 to pin 2, PA3 to pin 3, and ground to ground on both systems. Power to the S42C motor board was provided through an SKR V1.4 turbo as it is the easiest set up I have available. Providing approximately 24 volts to the VM connection on S42C motor board is sufficient to turn on the board.
 
-In the code, pin 2 is set up as RX and pin 3 is set up as TX. 
+In the code, pin 2 is set up as RX and pin 3 is set up as TX. For clarity, the Arduino script is meant to be loaded on the Arduino IDE. I have commented out functions that set P, I, D, and v values.
+
+A bit of a warning, if you are using the motor and want to glue parts to the shaft, be prepared to observe erratic behavior. 3D printing shaft collars that fit tight might be a better approach to get the motor to work. Otheerwise, in my experiences, the motor would move erratically in the wrong direction even after tuning the P values and setting I and D to 0.
