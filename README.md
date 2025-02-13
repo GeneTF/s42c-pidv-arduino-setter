@@ -1,1 +1,4 @@
 This is an Arduino script to set the PIDv values of the S42C motor designed by Big Tree Tech. The requirements are an Arduino Uno, an S42C motor, and three male to female jumper wires. UART communication is set up between the Arduino Uno and the S42C motor to set specific PIDv values.
+
+UART communication involves communication between devices by having a receive (RX) and transmit (TX) pin for all devices. The S42C motor board uses an STMicroelectronics chip that has pins set aside for RX and TX. The manual for the chip is found: https://www.st.com/en/microcontrollers-microprocessors/stm32g031g8.html. On the manual, you can find that PA2 supports USART_TX and PA3 supports USART_RX. The physical location of the pins can be found on the motor diagram in the user manual for S42C motor found here: https://github.com/bigtreetech/BIGTREETECH-Stepper-Motor-Driver/blob/master/BIGTREETECH%20S42C%20V1.0/BIGTREETECH%20S42C%20user%20manual.pdf.
+
