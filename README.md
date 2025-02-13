@@ -8,6 +8,8 @@ In my case, I connected PA2 to pin 2, PA3 to pin 3, and ground to ground on both
 
 In the code, pin 2 is set up as RX and pin 3 is set up as TX. For clarity, the Arduino script is meant to be loaded on the Arduino IDE. I have commented out functions that set P, I, D, and v values.
 
-A bit of a warning, if you are using the motor and want to glue parts to the shaft, be prepared to observe erratic behavior. 3D printing shaft collars that fit tight might be a better approach to get the motor to work. Otheerwise, in my experiences, the motor moved erratically in the wrong direction even after tuning the P values and setting I and D to 0.
+A bit of a warning, if you are using the motor and want to glue parts to the shaft, be prepared to observe erratic behavior. 3D printing shaft collars that fit tight might be a better approach to get the motor to work. Otherwise, in my experiences, the motor moved erratically in the wrong direction even after tuning the P values and setting I and D to 0.
 
 The S42C motor has been set up so that instructions through UART communications are sent as a sequence of bytes. On the manual, the sync bits are preset to 10101. The data size can vary depending on whether read or write is sent. For read, 0 is set as the size. For write, the size depends on what is being written. The sync bits and data size compose the first byte or 8 bits. The 2nd byte consists of a read/write bit defining which operation is being performed, and an 8 bit register address. The 8 bit register address serves as an identifier for what action is being performed. The actions are listed on the S42C motor manual. If the data size is set 010, 2 additional bytes need to be sent after the first two bytes. These last two bytes will depend on the action being performed.
+
+This code is open source and can be modified by anyone. Credit to creators of SoftwareSerial for making a convenient package.
