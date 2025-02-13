@@ -1,0 +1,1 @@
+This is an Arduino script to set the PIDv values of the S42C motor designed by Big Tree Tech. The requirements are an Arduino Uno, an S42C motor, and three male to female jumper wires. UART communication is set up between the Arduino Uno and the S42C motor to set specific PIDv values.
