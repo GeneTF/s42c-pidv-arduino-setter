@@ -23,6 +23,8 @@ const byte setMotorModeAddress = 0x13;
 const byte setUARTModeAddress = 0x20;
 const byte setStepModeAddress = 0x33;
 
+const byte readLocationAddress = 0x95;
+
 const byte setP = 0x06;
 const byte setI = 0x07;
 const byte setV = 0x08;
@@ -31,6 +33,14 @@ const byte setD = 0x09;
 const byte saveParams = 0x18;
 
 const bool doRead = true;
+
+bool throwNotAvailable = false;
+
+enum State {
+  WRITE, WAIT, READ
+};
+
+State STATE = WRITE;
 
 void setup() {
   // Define pin modes for TX and RX
@@ -44,13 +54,6 @@ void setup() {
   S42C.begin(115200);
 
   delay(100);
-
-  //saveParameters();
-  //setPvalue(50);
-  //setIvalue(10);
-  //setDvalue(0);
-  //setVvalue(0);
-  readStepModePID();
 }
 
 void writeGenericInput() {
@@ -85,6 +88,16 @@ void setDvalue(int Din) {
 
 void setVvalue(int Vin) {
   writeGenericPIDValue(Vin, setV);
+}
+
+void readLocation() {
+  byte dataSize = 0;
+
+  byte byte1 = syncBits | dataSize;
+  byte byte2 = readMode | readLocationAddress;
+
+  S42C.write(byte1); 
+  S42C.write(byte2);
 }
 
 void writeGenericPIDValue(int valueIn, byte addressIn) {
@@ -135,11 +148,46 @@ void readStepModePID() {
 }
 
 void loop() {
+  switch (STATE) {
+    case WRITE:
+      writeState();
+      break;
+    case READ:
+      readState();
+      break;
+    case WAIT:
+      waitState();
+      break;
+  }
+}
+
+void writeState() {
+  //saveParameters();
+  //setPvalue(50);
+  //setIvalue(1);
+  //setDvalue(0);
+  //setVvalue(0);
+  //readStepModePID();
+  readLocation();
+  STATE = READ;
+}
+
+void waitState() {
+  int delay_time = 5;
+
+  delay(delay_time * 1000);
+
+  STATE = WRITE;
+}
+
+void readState() {
   if (S42C.overflow()) {
         Serial.println("S42C overflow!");
   }
 
-  if (S42C.available() > 0 && doRead) {
+  while (S42C.available() > 0 && doRead) {
+    throwNotAvailable = true;
+
     byte input1 = S42C.read();
     fullInput += (char) input1;
     
@@ -148,8 +196,15 @@ void loop() {
     Serial.print((char) input1);
     Serial.print(" : ");
     Serial.println(fullInput);
-  }
+  } 
+    
+  if (throwNotAvailable) {
+    throwNotAvailable = false;
+    Serial.println("Not available!");
+    fullInput = "";
 
+    STATE = WAIT;
+  }
 }
 
 void printBinary(byte b) {
